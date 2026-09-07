@@ -1,1 +1,1 @@
-<h1 style="text-align: center;">个人网站主页</h1>
+<h1 style="text-align: center;">Hi</h1>
