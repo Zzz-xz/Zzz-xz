@@ -19,6 +19,24 @@
 - `public/css/apps.css`：页面样式，复用现有 `public/css/tokens.css`。
 - `tests/apps.test.mjs`：数据、素材、路由和下载边界测试。
 
+## Cloudflare Pages 构建环境
+
+仓库根目录的 `.node-version` 固定 Node.js 为 `24.14.0`，与已验证的本地构建版本一致。该文件需要提交到 Git；`package.json` 的 `engines.node` 仅声明兼容要求，不能代替 Cloudflare 的版本选择配置。
+
+Cloudflare Pages 项目使用以下设置：
+
+- 构建根目录：包含 `package.json` 和 `.node-version` 的仓库目录。
+- 构建命令：`npm run build`。
+- 构建输出目录：`dist`。
+- 若控制台已设置 `NODE_VERSION`，生产和预览环境均统一为 `24.14.0`，避免与仓库配置冲突。
+
+提交并推送 `.node-version` 后，对包含此文件的新提交发起部署。检查构建日志中实际使用的 Node.js 为 `24.14.0`，并确认测试、类型检查和静态构建全部通过。若只想立即重试现有提交，也可以先在 Cloudflare Pages 的 Settings → Environment variables 中设置 `NODE_VERSION=24.14.0`，保存后重试部署。
+
+2026-09-10 的失败日志使用 Node.js `22.16.0`，低于项目要求的 `>=24.0.0`；测试导入 `src/lib/app-schema.ts` 时出现 `ERR_UNKNOWN_FILE_EXTENSION`，未进入 Astro 构建。修复方式是统一构建运行时版本，保留现有测试及类型检查。
+
+参考：[Cloudflare Pages 构建环境与版本覆盖配置](https://developers.cloudflare.com/pages/configuration/build-image/)。
+
+
 ## GoodNight 更新
 
 发布新版本时同步更新 GitHub 附件、下载 Worker 的 RELEASE_TAGS 和 `goodnight.json` 的 version。本站不会在访客浏览时调用 GitHub API。
