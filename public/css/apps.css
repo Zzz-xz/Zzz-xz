@@ -1,0 +1,99 @@
+/**
+ * @file apps.css
+ * @brief 应用目录与详情沿用静水主题、边缘导航和单线页脚。
+ * Hallmark · macrostructure: Index-First + Long Document · theme: existing Atelier
+ * @note 设计自检：理念 5、层级 4、执行 4、内容 5、克制 5、结构 4。
+ */
+.apps-page .page-shell { pointer-events: auto; }
+.apps-main {
+    width: min(100%, var(--content-max));
+    margin-inline: auto;
+    padding: var(--space-2xl) var(--page-gutter) var(--space-3xl);
+    min-width: 0;
+}
+.apps-intro { display: grid; gap: var(--space-lg); padding-block-end: var(--space-3xl); }
+.apps-intro h1, .app-hero h1 {
+    min-width: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-title);
+    font-weight: 400;
+    font-style: normal;
+    line-height: 1.15;
+    letter-spacing: -0.035em;
+    overflow-wrap: anywhere;
+}
+.apps-intro > p, .app-summary { font-size: var(--text-md); line-height: 1.7; color: var(--color-ink-caption); }
+.app-list { list-style: none; border-top: var(--rule-hairline) solid var(--color-rule); }
+.app-entry {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: var(--space-lg);
+    padding-block: var(--space-xl);
+    border-bottom: var(--rule-hairline) solid var(--color-rule-soft);
+}
+.app-icon { width: 5rem; height: 5rem; object-fit: contain; }
+.app-entry__body { display: grid; gap: var(--space-sm); min-width: 0; }
+.app-entry h2, .app-section h2 { font-size: var(--text-md); font-weight: 500; line-height: 1.5; overflow-wrap: anywhere; }
+.app-entry__body > p { line-height: 1.7; }
+.app-entry__link { grid-column: 1 / -1; justify-self: start; min-height: 2.75rem; }
+.app-meta { display: flex; flex-wrap: wrap; gap: var(--space-xs) var(--space-md); color: var(--color-ink-muted); font-size: var(--text-sm); line-height: 1.7; }
+.app-back { min-height: 2.75rem; margin-block-end: var(--space-xl); }
+.app-detail { display: grid; min-width: 0; gap: var(--space-2xl); }
+.app-hero { align-self: start; display: grid; justify-items: start; gap: var(--space-lg); min-width: 0; }
+.app-hero .app-icon { width: 6rem; height: 6rem; }
+.app-hero h1 { font-size: clamp(2rem, 4vw, 3.5rem); }
+.app-summary { max-width: 48ch; }
+.app-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-md) var(--space-lg); margin-block-start: var(--space-sm); }
+.app-actions .text-link, .app-fallback { min-height: 2.75rem; }
+.app-download {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+    min-height: 3rem;
+    padding: var(--space-sm) var(--space-md);
+    border: var(--rule-hairline) solid var(--color-focus);
+    border-radius: var(--radius-sm);
+    background: var(--color-focus);
+    color: var(--color-accent-ink);
+    text-decoration: none;
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    max-width: 100%;
+    white-space: normal;
+    transition: opacity var(--dur-short) var(--ease-out);
+}
+.app-download:active { opacity: 0.8; }
+.app-help { max-width: 65ch; color: var(--color-ink-muted); font-size: var(--text-sm); line-height: 1.8; }
+.app-gallery { display: flex; flex-wrap: wrap; justify-content: center; align-items: start; gap: var(--space-xl); min-width: 0; }
+.app-gallery figure { width: min(100%, 18rem); min-width: 0; }
+.app-gallery img { width: 100%; height: auto; border: var(--rule-hairline) solid var(--color-rule-soft); border-radius: var(--radius-sm); }
+.app-gallery figcaption { margin-block-start: var(--space-sm); color: var(--color-ink-muted); font-size: var(--text-sm); line-height: 1.7; }
+.app-screenshot-link { display: block; }
+.app-guide { display: grid; gap: var(--space-2xl); min-width: 0; }
+.app-section { min-width: 0; padding-block-start: var(--space-xl); border-top: var(--rule-hairline) solid var(--color-rule); }
+.app-section h2 { margin-block-end: var(--space-lg); }
+.app-copy-list { display: grid; gap: var(--space-md); padding-inline-start: var(--space-lg); line-height: 1.85; color: var(--color-ink-caption); }
+.app-copy-list li { padding-inline-start: var(--space-xs); }
+.app-copy-list li::marker { color: var(--color-ink-muted); }
+.app-download-list { list-style: none; margin-block-start: var(--space-lg); }
+.app-download-list li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-md); padding-block: var(--space-lg); border-top: var(--rule-hairline) solid var(--color-rule-soft); }
+.app-download-list li > div { min-width: 0; overflow-wrap: anywhere; }
+.app-download-list .text-link { min-height: 2.75rem; }
+.app-notes > p { max-width: 72ch; color: var(--color-ink-caption); line-height: 1.85; margin-block-end: var(--space-md); }
+.app-inline-link { text-decoration-color: var(--color-accent); text-underline-offset: 0.22em; }
+.app-download:focus-visible, .app-screenshot-link:focus-visible, .app-inline-link:focus-visible { outline: 2px solid var(--color-focus); outline-offset: var(--focus-offset); border-radius: var(--radius-sm); }
+@media (hover: hover) and (pointer: fine) {
+    .app-download:hover { opacity: 0.9; }
+    .app-inline-link:hover { color: var(--color-focus); }
+}
+@media (min-width: 48rem) {
+    .app-entry { grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--space-xl); padding-block: var(--space-2xl); }
+    .app-entry__link { grid-column: auto; }
+    .app-detail { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); column-gap: var(--space-2xl); }
+    .app-hero { padding-block-start: var(--space-lg); }
+    .app-guide, .app-detail > .app-section { grid-column: 1 / -1; }
+    .app-guide { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2xl); }
+}
+@media (prefers-reduced-motion: reduce) { .app-download { transition: none; } }

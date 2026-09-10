@@ -237,3 +237,15 @@
         transform: none;
     }
 }
+
+/** 当前栏目同时使用下划线和颜色提示；窄屏按整项换行，文字不折断。 */
+.nav-links { flex-wrap: wrap; justify-content: flex-end; }
+.site-nav { gap: var(--space-md); flex-wrap: wrap; }
+.site-nav .identity-mark { flex-shrink: 0; }
+.nav-links .text-link { min-height: 2.75rem; }
+.nav-links .text-link[aria-current] { color: var(--color-focus); }
+.nav-links .text-link[aria-current]::after { transform: scaleX(1); }
+@media (max-width: 25rem) {
+    .nav-links { gap: var(--space-xs) var(--space-sm); }
+    .nav-links .text-link { letter-spacing: 0; }
+}

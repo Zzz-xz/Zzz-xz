@@ -1,0 +1,33 @@
+---
+/**
+ * @file [slug].astro
+ * @brief 根据已校验的应用集合生成详情页，未知标识不生成路由。
+ */
+import type { InferGetStaticPropsType } from 'astro';
+import SiteHeader from '../../components/SiteHeader.astro';
+import HomeFooter from '../../components/HomeFooter.astro';
+import AppDetail from '../../components/AppDetail.astro';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { getApps } from '../../lib/apps';
+
+/**
+ * 生成已发布内容的静态路径。
+ * @returns 路由参数与对应应用数据。
+ * @note 不为未知 slug 提供默认应用，错误路径交给静态主机返回 404。
+ */
+export async function getStaticPaths() {
+    return (await getApps()).map((app) => ({ params: { slug: app.slug }, props: { app } }));
+}
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+const { app } = Astro.props;
+---
+<SiteLayout title={`${app.name} · Apps · Zzz-xz`} description={app.summary} canonicalPath={app.href} bodyClass="apps-page" includeAppStyles>
+    <div class="page-shell">
+        <SiteHeader currentPage="app-detail" />
+        <main class="apps-main" id="content">
+            <a class="text-link app-back" href="/apps/">← 返回 Apps</a>
+            <AppDetail app={app} />
+        </main>
+        <HomeFooter />
+    </div>
+</SiteLayout>

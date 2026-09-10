@@ -3,6 +3,7 @@
  * @brief 定义资源收录内容集合及其构建期校验规则。
  */
 
+import { appSchema } from './lib/app-schema';
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
@@ -62,4 +63,9 @@ const resources = defineCollection({
     })
 });
 
-export const collections = { resources };
+const apps = defineCollection({
+    loader: glob({ pattern: '*.json', base: './src/data/apps' }),
+    schema: appSchema
+});
+
+export const collections = { resources, apps };

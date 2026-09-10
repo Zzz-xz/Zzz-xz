@@ -1,0 +1,74 @@
+---
+/**
+ * @file AppDetail.astro
+ * @brief 渲染跨应用复用的介绍、真实截图和下载选项，无客户端下载代理。
+ */
+import type { AppDefinition } from '../lib/app-schema';
+
+interface Props { app: AppDefinition; }
+const { app } = Astro.props;
+const primaryDownload = app.downloads.find((download) => download.primary);
+if (!primaryDownload) throw new Error(`应用缺少主下载入口：${app.slug}`);
+const alternatives = app.downloads.filter((download) => !download.primary);
+---
+<article class="app-detail">
+    <header class="app-hero">
+        <img class="app-icon" {...app.icon} loading="eager" decoding="async" />
+        <h1>{app.name}</h1>
+        <p class="app-summary">{app.summary}</p>
+        <p class="app-meta">{app.platforms.join(' · ')}<span>{app.version}</span><span>{app.status}</span></p>
+        <div class="app-actions">
+            <a class="app-download" href={primaryDownload.url} data-astro-prefetch="false">{primaryDownload.label}<span aria-hidden="true">↓</span></a>
+            {alternatives.length > 0 && <a class="text-link" href="#downloads">其他安装包</a>}
+            <a class="text-link" href={app.sourceUrl} target="_blank" rel="external noopener noreferrer">GitHub ↗</a>
+        </div>
+        <p class="app-help">{app.downloadHelp}</p>
+        <a class="text-link app-fallback" href={app.fallbackUrl} target="_blank" rel="external noopener noreferrer" data-astro-prefetch="false">GitHub 备用下载 ↗</a>
+    </header>
+
+    {app.screenshots.length > 0 && (
+        <section class="app-gallery" aria-label="应用截图">
+            {app.screenshots.map((screenshot) => (
+                <figure>
+                    <a class="app-screenshot-link" href={screenshot.src} target="_blank" rel="noopener noreferrer" aria-label="打开完整应用截图">
+                        <img src={screenshot.src} alt={screenshot.alt} width={screenshot.width} height={screenshot.height} loading="lazy" decoding="async" />
+                    </a>
+                    <figcaption>{screenshot.caption}</figcaption>
+                </figure>
+            ))}
+        </section>
+    )}
+
+    <div class="app-guide">
+        <section class="app-section" aria-labelledby="features-title">
+            <h2 id="features-title">主要功能</h2>
+            <ul class="app-copy-list">{app.features.map((feature) => <li>{feature}</li>)}</ul>
+        </section>
+        <section class="app-section" aria-labelledby="usage-title">
+            <h2 id="usage-title">开始使用</h2>
+            <ol class="app-copy-list">{app.usage.map((step) => <li>{step}</li>)}</ol>
+        </section>
+    </div>
+
+    {alternatives.length > 0 && (
+        <section class="app-section" id="downloads" aria-labelledby="downloads-title">
+            <h2 id="downloads-title">其他安装包</h2>
+            <p class="app-help">{app.downloadHelp}</p>
+            <ul class="app-download-list">
+                {alternatives.map((download) => (
+                    <li>
+                        <div><p>{download.architecture}</p><p class="app-help">{download.description}</p></div>
+                        <a class="text-link" href={download.url} data-astro-prefetch="false">下载 {download.label} <span aria-hidden="true">↓</span></a>
+                    </li>
+                ))}
+            </ul>
+        </section>
+    )}
+
+    <section class="app-section app-notes" aria-labelledby="notes-title">
+        <h2 id="notes-title">使用说明</h2>
+        {app.notes.map((note) => <p>{note}</p>)}
+        <p>本应用采用 <a class="app-inline-link" href={app.license.url} target="_blank" rel="external noopener noreferrer">{app.license.name} 许可证 ↗</a>。</p>
+        <a class="text-link" href={app.releaseUrl} target="_blank" rel="external noopener noreferrer">查看更新记录 ↗</a>
+    </section>
+</article>

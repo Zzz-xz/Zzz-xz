@@ -1,0 +1,37 @@
+---
+/**
+ * @file index.astro
+ * @brief 渲染自有应用目录，共用内容数据及网站背景。
+ */
+import SiteHeader from '../../components/SiteHeader.astro';
+import HomeFooter from '../../components/HomeFooter.astro';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { getApps } from '../../lib/apps';
+
+const apps = await getApps();
+---
+<SiteLayout title="Apps · Zzz-xz" description="我开发的应用，从日常的小需求出发。" canonicalPath="/apps/" bodyClass="apps-page" includeAppStyles>
+    <div class="page-shell">
+        <SiteHeader currentPage="apps" />
+        <main class="apps-main" id="content">
+            <header class="apps-intro">
+                <h1>Apps</h1>
+                <p>我开发的应用，从日常的小需求出发。</p>
+            </header>
+            <ul class="app-list" aria-label="自有应用">
+                {apps.map((app) => (
+                    <li class="app-entry">
+                        <img class="app-icon" {...app.icon} loading="lazy" decoding="async" />
+                        <div class="app-entry__body">
+                            <h2>{app.name}</h2>
+                            <p>{app.summary}</p>
+                            <p class="app-meta">{app.platforms.join(' · ')}<span>{app.status}</span><span>{app.version}</span></p>
+                        </div>
+                        <a class="text-link app-entry__link" href={app.href} aria-label={`查看 ${app.name} 详情`}>查看详情 <span aria-hidden="true">→</span></a>
+                    </li>
+                ))}
+            </ul>
+        </main>
+        <HomeFooter />
+    </div>
+</SiteLayout>

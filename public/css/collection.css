@@ -640,3 +640,6 @@ mark {
         transform: none;
     }
 }
+
+/** 搜索通过 hidden 隐藏条目与空状态，避免组件的 grid 布局覆盖浏览器默认隐藏规则。 */
+.resource-directory [hidden] { display: none; }

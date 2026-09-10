@@ -27,3 +27,7 @@ node_modules/
 dist/
 .astro/
 .cache/
+
+# Download verification and browser artifacts
+*.apk
+artifacts/

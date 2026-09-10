@@ -1,0 +1,81 @@
+{
+    "slug": "goodnight",
+    "name": "晚安 · GoodNight",
+    "summary": "设置时间，到期自动返回桌面并锁屏。",
+    "platforms": [
+        "Android 9+"
+    ],
+    "status": "已发布",
+    "version": "v1.0.0",
+    "order": 0,
+    "sourceUrl": "https://github.com/Zzz-xz/GoodNight",
+    "releaseUrl": "https://github.com/Zzz-xz/GoodNight/releases",
+    "fallbackUrl": "https://github.com/Zzz-xz/GoodNight/releases/latest",
+    "license": {
+        "name": "MIT",
+        "url": "https://github.com/Zzz-xz/GoodNight/blob/main/LICENSE"
+    },
+    "icon": {
+        "src": "/assets/apps/goodnight/icon.png",
+        "alt": "晚安图标：奶油白底色上的雾蓝月牙",
+        "width": 384,
+        "height": 384
+    },
+    "screenshots": [
+        {
+            "src": "/assets/apps/goodnight/release-countdown.png",
+            "alt": "晚安当前发布版运行界面：显示距离自动锁屏的倒计时、取消计时按钮和已就绪的权限状态",
+            "width": 281,
+            "height": 628,
+            "caption": "计时开始后，可以切换到其他应用。"
+        }
+    ],
+    "features": [
+        "自定义 1–720 分钟计时，也可选择 15、30、60 分钟预设。",
+        "离开应用后继续计时，到期返回桌面并锁屏。",
+        "状态栏显示图标，下拉通知可查看剩余时间或取消计时。",
+        "集中查看权限状态，快捷进入对应系统设置。",
+        "启动时跟随系统主题，支持点击切换明暗主题。"
+    ],
+    "usage": [
+        "下载并安装适合设备的 APK。",
+        "按应用提示开启无障碍服务、通知和系统要求的精确闹钟权限。",
+        "输入时长或选择预设，点击「开始计时」。",
+        "切换到其他应用，到期自动返回桌面并锁屏。"
+    ],
+    "notes": [
+        "晚安沿用手机原有解锁设置；支持后台播放或画中画的应用，锁屏后仍可能播放。",
+        "撤销必要权限、强行停止应用或厂商后台限制可能影响计时，首次使用建议先做一次短时测试。"
+    ],
+    "downloadHelp": "不清楚设备架构时，选择通用版即可。只需安装其中一个安装包，后续更新保持相同类型。",
+    "downloads": [
+        {
+            "label": "下载 Android 通用版",
+            "architecture": "通用版",
+            "description": "适合不确定设备架构的用户。",
+            "url": "https://download.lingin.top/goodnight/latest/universal.apk",
+            "primary": true
+        },
+        {
+            "label": "ARM64",
+            "architecture": "arm64-v8a",
+            "description": "多数现代 Android 手机可选。",
+            "url": "https://download.lingin.top/goodnight/latest/arm64-v8a.apk",
+            "primary": false
+        },
+        {
+            "label": "ARM32",
+            "architecture": "armeabi-v7a",
+            "description": "适用于支持 32 位 ARM 应用的设备。",
+            "url": "https://download.lingin.top/goodnight/latest/armeabi-v7a.apk",
+            "primary": false
+        },
+        {
+            "label": "x86_64",
+            "architecture": "x86_64",
+            "description": "适用于对应架构的 Android 设备或模拟器。",
+            "url": "https://download.lingin.top/goodnight/latest/x86_64.apk",
+            "primary": false
+        }
+    ]
+}

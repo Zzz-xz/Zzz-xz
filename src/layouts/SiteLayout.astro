@@ -12,6 +12,7 @@ interface Props {
     canonicalPath: string;
     bodyClass?: string;
     includeCollectionStyles?: boolean;
+    includeAppStyles?: boolean;
 }
 
 const {
@@ -19,6 +20,7 @@ const {
     description,
     canonicalPath,
     bodyClass,
+    includeAppStyles = false,
     includeCollectionStyles = false
 } = Astro.props;
 const canonicalUrl = new URL(canonicalPath, Astro.site ?? Astro.url.origin);
@@ -60,8 +62,9 @@ const canonicalUrl = new URL(canonicalPath, Astro.site ?? Astro.url.origin);
         <link rel="stylesheet" href="/css/base.css" />
         <link rel="stylesheet" href="/css/ripple.css" />
         <link rel="stylesheet" href="/css/main.css" />
-        {includeCollectionStyles && <link rel="stylesheet" href="/css/maple-font-extended.css" />}
+        {(includeCollectionStyles || includeAppStyles) && <link rel="stylesheet" href="/css/maple-font-extended.css" />}
         {includeCollectionStyles && <link rel="stylesheet" href="/css/collection.css" />}
+        {includeAppStyles && <link rel="stylesheet" href="/css/apps.css" />}
     </head>
     <body class={bodyClass}>
         <RippleBackground />
