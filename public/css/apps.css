@@ -1,8 +1,6 @@
 /**
  * @file apps.css
- * @brief 应用目录与详情沿用静水主题、边缘导航和单线页脚。
- * Hallmark · macrostructure: Index-First + Long Document · theme: existing Atelier
- * @note 设计自检：理念 5、层级 4、执行 4、内容 5、克制 5、结构 4。
+ * @brief 定义应用目录、详情和下载入口的响应式样式。
  */
 .apps-page .page-shell { pointer-events: auto; }
 .apps-main {

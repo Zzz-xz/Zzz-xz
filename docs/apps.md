@@ -1,70 +1,74 @@
-# Apps 页面维护
+# Apps 开发与维护
 
-已实现应用目录 `/apps/` 和数据驱动详情 `/apps/[slug]/`。全站导航为 Collection、Apps、GitHub，头像返回主页。列表使用 `aria-current="page"`，详情中 Apps 使用 `aria-current="location"`。
+Apps 使用 Astro 内容集合生成应用列表和详情页。应用信息与展示模板分离，增加应用无需复制页面。
+
+## 路由与模块
+
+| 文件或目录 | 职责 |
+| --- | --- |
+| `src/data/apps/` | 应用内容数据 |
+| `src/lib/app-schema.ts` | 内容结构、下载入口和路由唯一性校验 |
+| `src/lib/apps.ts` | 读取并整理应用集合 |
+| `src/pages/apps/index.astro` | 应用列表 `/apps/` |
+| `src/pages/apps/[slug].astro` | 按 slug 生成静态详情页 |
+| `src/components/AppDetail.astro` | 通用详情模板 |
+| `public/assets/apps/` | 随站点发布的应用图标和截图 |
+| `public/css/apps.css` | 应用页面样式 |
+| `tests/apps.test.mjs` | 内容、素材及路由边界测试 |
+
+页面复用共享导航、布局和设计变量。Apps 列表使用 `aria-current="page"` 标记导航状态，详情页使用 `aria-current="location"`。只有内容集合中的应用会生成详情路由，未知 slug 应由静态托管服务返回 404。
 
 ## 新增应用
 
-1. 在 `src/data/apps/` 新增 JSON，参考 `goodnight.json`。
-2. 素材放入 `public/assets/apps/<slug>/`，填写真实图片尺寸、替代文本及截图说明。
-3. 填写唯一 slug、平台、版本、状态、功能、使用步骤、注意事项及 HTTPS 外链。必须且只能指定一个 `primary: true` 下载入口；支持不同平台、商店链接，截图数组可为空。
-4. 运行 `npm.cmd run build`（非 PowerShell 环境可用 `npm run build`），核对列表、详情和下载。
-5. 内容集合自动生成路由，无需复制页面或修改导航。重复 slug、非法 URL、缺失主下载及无效图片尺寸会阻止构建或测试。
+1. 在 `src/data/apps/` 新增 JSON，参考 `goodnight.json` 的字段结构。
+2. 设置唯一的 slug，并填写名称、摘要、支持平台、发布状态、版本及排序值。
+3. 提供功能介绍、使用步骤、注意事项、源码地址、更新记录和许可证链接。
+4. 将图标和真实发布版截图加入 `public/assets/apps/<slug>/`，填写站点资源地址、实际宽高、替代文本和截图说明。没有可用截图时使用空数组。
+5. 配置下载入口，必须且只能有一项设置为 `primary: true`。入口支持安装包和应用商店链接，不要求所有应用使用相同平台或架构。
+6. 执行检查和构建，确认列表、详情及下载链接正确。
 
-代码职责：
+外部链接必须使用 HTTPS，不得包含用户名、密码或临时访问凭据。应用说明、版本、兼容性及截图应对应实际发布内容，不使用占位应用或未经核实的宣传数据。
 
-- `src/lib/app-schema.ts`：内容契约与路由唯一性检查。
-- `src/lib/apps.ts`：构建时读取集合。
-- `src/components/AppDetail.astro`：通用内容展示。
-- `src/pages/apps/`：列表和静态详情路由。
-- `public/css/apps.css`：页面样式，复用现有 `public/css/tokens.css`。
-- `tests/apps.test.mjs`：数据、素材、路由和下载边界测试。
+## 版本与下载维护
 
-## Cloudflare Pages 构建环境
+更新 GoodNight 时，同步维护 GitHub Release 附件、下载服务版本配置和 `goodnight.json` 中的展示版本，确保页面与实际下载内容一致。
 
-仓库根目录的 `.node-version` 固定 Node.js 为 `24.14.0`，与已验证的本地构建版本一致。该文件需要提交到 Git；`package.json` 的 `engines.node` 仅声明兼容要求，不能代替 Cloudflare 的版本选择配置。
+下载通过普通链接交由浏览器处理，安装包响应由下载服务提供 Content-Disposition。下载链接设置 `data-astro-prefetch="false"`，防止页面访问触发安装包预取。不得将 APK 加入预缓存，也不需要前端 Blob 下载、代理接口或访客侧 GitHub API 请求。
 
-Cloudflare Pages 项目使用以下设置：
+图标与截图使用仓库内的公开素材，不依赖仓库外的文件。图片应明确宽高，首屏外图片延迟加载。更新素材时检查并移除 EXIF、XMP 等可能携带个人信息或编辑记录的附加元数据。
 
-- 构建根目录：包含 `package.json` 和 `.node-version` 的仓库目录。
-- 构建命令：`npm run build`。
-- 构建输出目录：`dist`。
-- 若控制台已设置 `NODE_VERSION`，生产和预览环境均统一为 `24.14.0`，避免与仓库配置冲突。
+每个应用的许可证仅适用于对应项目。第三方字体和脚本的版权声明及许可证应保留，不将应用许可证扩大到全部站点资源。
 
-提交并推送 `.node-version` 后，对包含此文件的新提交发起部署。检查构建日志中实际使用的 Node.js 为 `24.14.0`，并确认测试、类型检查和静态构建全部通过。若只想立即重试现有提交，也可以先在 Cloudflare Pages 的 Settings → Environment variables 中设置 `NODE_VERSION=24.14.0`，保存后重试部署。
+## 构建与部署
 
-2026-09-10 的失败日志使用 Node.js `22.16.0`，低于项目要求的 `>=24.0.0`；测试导入 `src/lib/app-schema.ts` 时出现 `ERR_UNKNOWN_FILE_EXTENSION`，未进入 Astro 构建。修复方式是统一构建运行时版本，保留现有测试及类型检查。
+Node.js 版本以仓库根目录的 `.node-version` 为准，npm 版本以 `package.json` 的 `packageManager` 为准。
 
-参考：[Cloudflare Pages 构建环境与版本覆盖配置](https://developers.cloudflare.com/pages/configuration/build-image/)。
-
-
-## GoodNight 更新
-
-发布新版本时同步更新 GitHub 附件、下载 Worker 的 RELEASE_TAGS 和 `goodnight.json` 的 version。本站不会在访客浏览时调用 GitHub API。
-
-下载使用普通链接与服务端 Content-Disposition，明确设置 `data-astro-prefetch="false"`。不添加 APK 预取、Service Worker 预缓存、前端 Blob 下载或代理。默认主机沿用 `https://www.lingin.top`；本项目原先没有 sitemap，本次未另建重复索引机制。
-
-当前图标来自 GoodNight 的 `docs/assets/goodnight-readme.png`。倒计时截图为用户于 2026-09-10 确认的当前 Release 运行原图 `E:/Personal_Code/release.png`（281 × 628），原样复制至 `public/assets/apps/goodnight/release-countdown.png`，无裁剪、放大或界面重绘。之前使用的 `temp/experience-active.png` 属于旧版本测试图，已替换并移除网站内的旧素材。MIT 链接仅说明应用许可证。
-
-## 本地验收（2026-09-10）
-
-- `npm.cmd run build`：13 项测试通过；Astro 0 错误、0 警告、0 提示；生成首页、Collection、Apps 和 GoodNight 共四个页面。
-- Chrome 真实浏览器：四页面分别通过 320、360、375、390、414、768、1440 像素宽度检查；无横向溢出或被裁切的关键内容，导航垂直对齐。
-- Apps 页面 200% 文字放大、键盘下载焦点、图片 alt、减少动画均通过。减少动画模式下不创建水纹 canvas，普通模式每页最多一个实例。
-- 首页水莲及时间页脚，Collection 搜索、清空、分类锚点及声明通过。回归中修复了原有 grid 样式覆盖 hidden 属性的问题。
-- Apps 列表/详情/返回、直接访问、刷新、浏览器前进后退通过。未知 slug 返回 404。
-- 四个下载入口均经 latest 跳转至 v1.0.0 并返回 APK Content-Type；GitHub 备用下载及 main 分支 MIT 链接返回 200。
-- 浏览器点击前没有 APK 请求；点击后成功完整下载通用版，49,265,368 字节，ZIP 完整性通过。SHA-256 与 GitHub Release 附件摘要一致：
-
-```text
-0efc40bf02fe9909d2fb42dc9461ded5afdab25c3c040af2e04d9ac442fa0220
+```sh
+npm ci
+npm run check
+npm run build
 ```
 
-浏览器报告、桌面/手机截图、临时测试工具及 APK 位于已忽略的 `artifacts/apps/` 和 `.cache/browser-testing/`，不提交。没有修改项目依赖。
+生产构建会执行资源校验、测试和 Astro 类型检查，静态文件输出至 `dist`。
 
-预览：`npm.cmd run preview -- --host 127.0.0.1 --port 4321`，打开 `http://127.0.0.1:4321/apps/`。停止预览：`npm.cmd run preview -- stop`。
+Cloudflare Pages 配置：
 
-尚未执行线上部署、真实手机安装、各 Android 厂商兼容性或断点续传测试。本次是网站开发及下载验收，不将已有应用验收视为本轮重新验证。
+| 配置项 | 值 |
+| --- | --- |
+| 构建根目录 | 包含 `package.json` 和 `.node-version` 的仓库目录 |
+| 构建命令 | `npm run build` |
+| 输出目录 | `dist` |
+| Node.js 版本 | 由 `.node-version` 指定 |
 
-建议提交信息：`feat(apps): add app catalog and GoodNight download page`。
+若托管平台另设 `NODE_VERSION`，应与 `.node-version` 保持一致，并同步生产及预览环境。`engines.node` 声明兼容范围，不能代替托管平台的运行时版本配置。部署时确认实际使用的 Node.js 版本符合要求。
 
-补充验证：临时第二款应用已成功生成独立详情，并验证无截图、单一商店下载入口的模板分支；临时数据已移除，最终构建仅含真实应用。APK 元数据确认为 versionName 1.0.0、versionCode 2、最低 API 28（Android 9），与页面一致。
+站点主机名由 `astro.config.mjs` 的 `site` 配置决定，新增页面应通过共享布局生成 canonical 地址。
+
+## 提交前检查
+
+- 内容校验、测试、类型检查和生产构建通过。
+- 列表、详情、返回导航、刷新、直接访问及未知 slug 行为正确。
+- 窄屏、平板和桌面无内容溢出；文字放大、键盘焦点、图片替代文本和减少动画设置可用。
+- 下载链接仅在用户操作后触发，安装包版本与页面一致；需要校验值时，以对应发布附件为准。
+- 首页与 Collection 的既有功能正常，页面没有新增资源加载错误。
+- 提交仅包含源码、维护文档和必要的公开素材，不包含凭据、个人设备信息、调试记录或生成产物。
