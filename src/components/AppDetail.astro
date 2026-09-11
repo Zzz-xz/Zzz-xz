@@ -16,7 +16,7 @@ const alternatives = app.downloads.filter((download) => !download.primary);
         <img class="app-icon" {...app.icon} loading="eager" decoding="async" />
         <h1>{app.name}</h1>
         <p class="app-summary">{app.summary}</p>
-        <p class="app-meta">{app.platforms.join(' · ')}<span>{app.version}</span><span>{app.status}</span></p>
+        <p class="app-meta">{app.platforms.join(' · ')}<span>{app.version}</span><span>{app.status}</span>{app.release && <span>发布于 <time datetime={app.release.date}>{app.release.date}</time></span>}</p>
         <div class="app-actions">
             <a class="app-download" href={primaryDownload.url} data-astro-prefetch="false">{primaryDownload.label}<span aria-hidden="true">↓</span></a>
             {alternatives.length > 0 && <a class="text-link" href="#downloads">其他安装包</a>}
@@ -49,6 +49,15 @@ const alternatives = app.downloads.filter((download) => !download.primary);
             <ol class="app-copy-list">{app.usage.map((step) => <li>{step}</li>)}</ol>
         </section>
     </div>
+
+    {app.release && (
+        <section class="app-section app-notes" aria-labelledby="release-title">
+            <h2 id="release-title">{app.version} 更新内容</h2>
+            <p>{app.release.summary}</p>
+            <p>{app.release.upgradeNotice}</p>
+            <ul class="app-copy-list">{app.release.changes.map((change) => <li>{change}</li>)}</ul>
+        </section>
+    )}
 
     {alternatives.length > 0 && (
         <section class="app-section" id="downloads" aria-labelledby="downloads-title">

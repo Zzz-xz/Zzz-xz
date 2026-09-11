@@ -28,6 +28,12 @@ export const appSchema = z.object({
     platforms: z.array(text).min(1),
     status: text,
     version: text,
+    release: z.object({
+        date: z.iso.date(),
+        summary: text.max(200),
+        changes: z.array(text).min(1),
+        upgradeNotice: text
+    }).optional(),
     order: z.number().int().nonnegative(),
     sourceUrl: httpsUrl,
     releaseUrl: httpsUrl,

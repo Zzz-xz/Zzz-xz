@@ -25,7 +25,7 @@ const apps = await getApps();
                         <div class="app-entry__body">
                             <h2>{app.name}</h2>
                             <p>{app.summary}</p>
-                            <p class="app-meta">{app.platforms.join(' · ')}<span>{app.status}</span><span>{app.version}</span></p>
+                            <p class="app-meta">{app.platforms.join(' · ')}<span>{app.status}</span><span>{app.version}</span>{app.release && <span>更新于 <time datetime={app.release.date}>{app.release.date}</time></span>}</p>
                         </div>
                         <a class="text-link app-entry__link" href={app.href} aria-label={`查看 ${app.name} 详情`}>查看详情 <span aria-hidden="true">→</span></a>
                     </li>

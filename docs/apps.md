@@ -31,7 +31,13 @@ Apps 使用 Astro 内容集合生成应用列表和详情页。应用信息与�
 
 ## 版本与下载维护
 
-更新 GoodNight 时，同步维护 GitHub Release 附件、下载服务版本配置和 `goodnight.json` 中的展示版本，确保页面与实际下载内容一致。
+应用版本统一维护在对应 JSON 的 `version` 字段中。可选的 `release` 对象包含 `date`（有效的 YYYY-MM-DD 发布日期）、`summary`（更新摘要）、`changes`（更新条目）和 `upgradeNotice`（升级提示）；填写时应提供全部字段。列表与详情共用这些数据，发布日期以正式 Release 为准，不使用站点构建日期。没有更新说明的应用可省略整个 `release` 对象。
+
+GoodNight 的四种架构下载入口统一使用 `https://download.lingin.top/goodnight/latest/<架构>.apk`，`fallbackUrl` 使用 GitHub 的 `/releases/latest`。发布新版本时无需改写这些入口；其他应用也应优先使用下载服务提供的稳定入口或商店链接，不假设所有服务都支持 `latest`。
+
+`latest` 的实际版本由下载服务决定，不由页面中的 `version` 字段决定，也不能仅凭路径名称认定它会自动跟随 GitHub Release。每次发布须确认下载服务已切换到最新正式版，逐个验证架构、重定向目标与附件，并同步 `version` 和 `release` 展示信息。下载服务应避免缓存旧的 `latest` 跳转，保留固定版本地址以支持旧链接。
+
+`releaseUrl` 对应页面展示的更新说明，使用该版本的 Release 地址；历史记录同样保留固定版本链接。若展示具体包大小或 SHA-256，应将它们与固定版本下载配对，避免稳定入口升级后校验信息仍属于旧版。
 
 下载通过普通链接交由浏览器处理，安装包响应由下载服务提供 Content-Disposition。下载链接设置 `data-astro-prefetch="false"`，防止页面访问触发安装包预取。不得将 APK 加入预缓存，也不需要前端 Blob 下载、代理接口或访客侧 GitHub API 请求。
 

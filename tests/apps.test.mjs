@@ -59,3 +59,22 @@ test('下载入口必须有且只有一个主选项，支持不同平台及商�
         downloads: [{ label: 'App Store', architecture: 'iOS', description: '前往商店', url: 'https://apps.apple.com/app/example', primary: true }]
     }).success, true);
 });
+
+/** 发布信息允许整体省略，但填写后必须包含有效日期和完整内容，避免展示残缺说明。 */
+test('发布信息兼容未提供更新记录的应用，并拒绝无效日期和空白内容', () => {
+    const release = {
+        date: '2024-02-29',
+        summary: '优化通知显示。',
+        changes: ['修复通知对齐。'],
+        upgradeNotice: '覆盖安装后检查权限。'
+    };
+    const { release: omitted, ...withoutRelease } = sample;
+    assert.equal(appSchema.safeParse(withoutRelease).success, true);
+    assert.equal(appSchema.safeParse({ ...sample, release }).success, true);
+    for (const date of ['2025-02-29', '2026-04-31', '2026-13-01', '2026-9-11', '2026-09-11T00:00:00Z', '']) {
+        assert.equal(appSchema.safeParse({ ...sample, release: { ...release, date } }).success, false, date);
+    }
+    for (const invalid of [{}, null, { ...release, changes: [] }, { ...release, changes: [' '] }, { ...release, summary: ' ' }, { ...release, upgradeNotice: '' }]) {
+        assert.equal(appSchema.safeParse({ ...sample, release: invalid }).success, false);
+    }
+});
